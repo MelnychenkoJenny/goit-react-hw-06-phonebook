@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -13,6 +12,10 @@ import {
   ErrorMessageStyle,
 } from './ContacrForm.styled';
 import { phoneRegExp } from 'components/calc/phoneRegExp';
+import { useDispatch, useSelector } from 'react-redux';
+import { formattedNumber } from 'components/calc/numberFormatted';
+import { getContacts } from 'redux/selectors';
+import { addContacts } from 'redux/contactsSlice';
 
 const schema = yup.object().shape({
   name: yup.string().required("Ім'я обов'язкове!"),
@@ -26,7 +29,9 @@ const schema = yup.object().shape({
 const nameId = nanoid();
 const numberId = nanoid();
 
-export const ContactForm = ({ addContact }) => {
+export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -35,9 +40,20 @@ export const ContactForm = ({ addContact }) => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     addContact(data.name, data.number);
     reset();
+  };
+  const addContact = (name, number) => {
+    const formatted = formattedNumber(number);
+    const repeatName = contacts.some(
+      el => el.name.toLowerCase() === name.toLowerCase()
+    );
+    if (repeatName) {
+      return alert(`${name} вже є в контактах`);
+    }
+
+    dispatch(addContacts(name, formatted));
   };
 
   return (
@@ -74,8 +90,4 @@ export const ContactForm = ({ addContact }) => {
       <Button type="submit">Додати контакт</Button>
     </FormStyle>
   );
-};
-
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
 };

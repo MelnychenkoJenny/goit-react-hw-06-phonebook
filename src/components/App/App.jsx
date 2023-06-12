@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
-import initialContacts from 'components/data/contacts.json';
+// import { useState, useEffect } from 'react';
+// import { nanoid } from 'nanoid';
+// import initialContacts from 'components/data/contacts.json';
 import {
   Container,
   MainTitle,
@@ -13,18 +13,26 @@ import { ContactForm } from 'components/ContactForm';
 import { Filter } from 'components/Filter';
 import { Contacts } from 'components/Contacts';
 import { formattedNumber } from 'components/calc/numberFormatted';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContacts, deleteContacts } from 'redux/contactsSlice';
+import { setFilter } from 'redux/filterSlice';
 
-const STORAGE_KEY_CONTACTS = 'contacts';
+// const STORAGE_KEY_CONTACTS = 'contacts';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem(STORAGE_KEY_CONTACTS)) ?? initialContacts
-  );
-  const [filter, setFilter] = useState('');
+  // const [contacts, setContacts] = useState(
+  //   () => JSON.parse(localStorage.getItem(STORAGE_KEY_CONTACTS)) ?? initialContacts
+  // );
+  // const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-   localStorage.setItem(STORAGE_KEY_CONTACTS, JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //  localStorage.setItem(STORAGE_KEY_CONTACTS, JSON.stringify(contacts));
+  // }, [contacts]);
+  const contacts = useSelector(state=>state.contacts)
+  console.log(contacts);
+  const filter = useSelector(state=>state.filter)
+
+  const dispatch = useDispatch();
 
   const addContact = (name, number) => {
     const formatted = formattedNumber(number);
@@ -34,29 +42,34 @@ export const App = () => {
     if (repeatName) {
       return alert(`${name} вже є в контактах`);
     }
-    const contact = {
-      id: nanoid(),
-      name,
-      number: formatted,
-    };
-    setContacts(prevContacts => [contact, ...prevContacts]);
+
+dispatch(addContacts(name, formatted))
+    // const contact = {
+    //   id: nanoid(),
+    //   name,
+    //   number: formatted,
+    // };
+    // setContacts(prevContacts => [contact, ...prevContacts]);
   };
 
   const changeFilter = event => {
-    setFilter(event.currentTarget.value);
+    dispatch(setFilter(event.currentTarget.value))
+    // setFilter(event.currentTarget.value);
   };
 
   const getVisibleContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
+    const normalizedFilter = filter.query.toLowerCase();
+
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
   const deleteContact = contactId => {
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== contactId)
-    );
+    dispatch(deleteContacts(contactId))
+    // setContacts(prevContacts =>
+    //   prevContacts.filter(contact => contact.id !== contactId)
+    // );
   };
 
   const visibleContacts = getVisibleContacts();
@@ -70,9 +83,8 @@ export const App = () => {
         <AmountContacts>
           Загальна кількість контактів: {contacts.length}
         </AmountContacts>
-        <Filter value={filter} onChange={changeFilter} />
-
-        {visibleContacts.length ? (
+        <Filter value={filter.query} onChange={changeFilter} />
+ {visibleContacts.length  ? (
           <Contacts
             contacts={visibleContacts}
             onDeleteContact={deleteContact}

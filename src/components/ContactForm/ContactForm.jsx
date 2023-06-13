@@ -62,7 +62,7 @@ export const ContactForm = () => {
         <InputLabel htmlFor={nameId}>Ім'я</InputLabel>
         <InputName
           {...register('name')}
-          type="tel"
+          type="text"
           name="name"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           // required

@@ -23,6 +23,7 @@ export const MainTitle = styled.h1`
     font-size: 40px;
   }
 `;
+
 export const Title = styled.h2`
   text-align: center;
   margin-bottom: 10px;
@@ -47,11 +48,13 @@ export const ContactsContainer = styled.div`
     min-width: 600px;
   }
 `;
+
 export const AmountContacts = styled.p`
   @media screen and (min-width: 1200px) {
     font-size: 18px;
   }
 `;
+
 export const EmptyText = styled.p`
   @media screen and (min-width: 1200px) {
     font-size: 18px;

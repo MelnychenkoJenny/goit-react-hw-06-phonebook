@@ -15,14 +15,16 @@ import { getContacts, getFilter } from 'redux/selectors';
 export const App = () => {
   const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
+
   const getVisibleContacts = () => {
     const normalizedFilter = filter.query.toLowerCase();
-
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
+  
   const visibleContacts = getVisibleContacts();
+
   return (
     <Container>
       <MainTitle>Телефонна книга</MainTitle>
@@ -34,7 +36,7 @@ export const App = () => {
         </AmountContacts>
         <Filter />
         {visibleContacts.length ? (
-          <Contacts contacts={visibleContacts}/>
+          <Contacts contacts={visibleContacts} />
         ) : (
           <EmptyText>Не знайдено жодного контакту</EmptyText>
         )}

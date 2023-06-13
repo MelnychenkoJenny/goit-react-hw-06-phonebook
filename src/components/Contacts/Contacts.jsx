@@ -1,16 +1,14 @@
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { deleteContacts } from 'redux/contactsSlice';
 import { ContactsList, ContactsItem, ButtonDelete } from './Contacts.styled';
 
-export const Contacts = ({contacts}) => {
-
+export const Contacts = ({ contacts }) => {
   const dispatch = useDispatch();
-  
 
   const deleteContact = contactId => {
     dispatch(deleteContacts(contactId));
   };
-  
+
   return (
     <ContactsList>
       {contacts.map(({ id, name, number }) => (

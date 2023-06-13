@@ -21,8 +21,8 @@ const schema = yup.object().shape({
   name: yup.string().required("Ім'я обов'язкове!"),
   number: yup
     .string()
+    .matches(phoneRegExp, 'Номер має складатись тільки з цифр. Приберіть лишні символи.')
     .required("Номер обов'язковий!")
-    .matches(phoneRegExp, 'Номер має складатись з цифр (не менше 7)')
     .min(7, 'Номер має бути не менше 7 цифр'),
 });
 
